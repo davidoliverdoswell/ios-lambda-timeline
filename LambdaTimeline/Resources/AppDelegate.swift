@@ -27,8 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = postsNavigationController
             window?.makeKeyAndVisible()
         }
-        
-        
         return true
     }
     

@@ -23,7 +23,15 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.873272785897-7rlq5dqbnu9sdhg6nqhl4cn3drnl7uad</string>
+				<string>com.googleusercontent.apps.889299564445-m03lbij2o5tjv82hj108tm6au0jiehdq</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.889299564445-m03lbij2o5tjv82hj108tm6au0jiehdq</string>
 			</array>
 		</dict>
 	</array>
@@ -44,8 +52,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

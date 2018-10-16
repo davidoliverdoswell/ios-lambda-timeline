@@ -41,6 +41,11 @@ class ImagePostDetailTableViewController: UITableViewController {
             commentTextField = textField
         }
         
+        alert.addTextField { (textField) in
+            textField.placeholder = "Audio:"
+            commentTextField = textField
+        }
+        
         let addCommentAction = UIAlertAction(title: "Add Comment", style: .default) { (_) in
             
             guard let commentText = commentTextField?.text else { return }
@@ -52,9 +57,20 @@ class ImagePostDetailTableViewController: UITableViewController {
             }
         }
         
+        let addAudioCommentAction = UIAlertAction(title: "Add Audio", style: .default) { (_) in
+            
+            guard let audioComment = commentTextField?.text else { return }
+            
+            self.postController.addComment(with: audioComment, to: &self.post!)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         alert.addAction(addCommentAction)
+        alert.addAction(addAudioCommentAction)
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
