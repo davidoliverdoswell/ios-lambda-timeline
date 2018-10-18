@@ -62,7 +62,9 @@ class ImagePostViewController: ShiftableViewController {
             return
         }
         
-        postController.createPost(with: title, ofType: .image, mediaData: imageData, ratio: imageView.image?.ratio) { (success) in
+        
+        
+        postController.createPost(with: title, ofType: .image, mediaData: imageData, audio: audioData!, ratio: imageView.image?.ratio) { (success) in
             guard success else {
                 DispatchQueue.main.async {
                     self.presentInformationalAlertController(title: "Error", message: "Unable to create post. Try again.")
@@ -105,6 +107,23 @@ class ImagePostViewController: ShiftableViewController {
         presentImagePickerController()
     }
     
+    @IBAction func chooseRecording(_ sender: Any) {
+        let session = AVAudioSession.sharedInstance()
+        session.requestRecordPermission { (granted) in
+            if !granted {
+                NSLog("Please give simple audio recorder permission to access mic in settings")
+                return
+            }
+            do {
+                try session.setCategory(.playAndRecord, mode: .default, options: [])
+                try session.overrideOutputAudioPort(.speaker)
+                try session.setActive(true, options: [])
+            } catch {
+                NSLog("Error setting up audio session: \(error)")
+            }
+        }
+    }
+    
     func setImageViewHeight(with aspectRatio: CGFloat) {
         
         imageHeightConstraint.constant = imageView.frame.size.width * aspectRatio
@@ -115,10 +134,12 @@ class ImagePostViewController: ShiftableViewController {
     var postController: PostController!
     var post: Post?
     var imageData: Data?
+    var audioData: Audio?
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var chooseImageButton: UIButton!
+    @IBOutlet weak var chooseRecordingButton: UIButton!
     @IBOutlet weak var imageHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var postButton: UIBarButtonItem!
 }
@@ -128,6 +149,7 @@ extension ImagePostViewController: UIImagePickerControllerDelegate, UINavigation
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
         chooseImageButton.setTitle("", for: [])
+        chooseRecordingButton.setTitle("Choose a Recording", for: .normal)
         
         picker.dismiss(animated: true, completion: nil)
         

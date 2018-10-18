@@ -35,6 +35,7 @@ class ImagePostDetailTableViewController: UITableViewController {
         let alert = UIAlertController(title: "Add a comment", message: "Write your comment below:", preferredStyle: .alert)
         
         var commentTextField: UITextField?
+        var audioCommentTextField: UITextField?
         
         alert.addTextField { (textField) in
             textField.placeholder = "Comment:"
@@ -43,25 +44,24 @@ class ImagePostDetailTableViewController: UITableViewController {
         
         alert.addTextField { (textField) in
             textField.placeholder = "Audio:"
-            commentTextField = textField
+            audioCommentTextField = textField
         }
         
         let addCommentAction = UIAlertAction(title: "Add Comment", style: .default) { (_) in
             
             guard let commentText = commentTextField?.text else { return }
             
-            self.postController.addComment(with: commentText, to: &self.post!)
-            
+            self.postController.addComment(with: commentText, audio: self.audio, to: &self.post!)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
         
         let addAudioCommentAction = UIAlertAction(title: "Add Audio", style: .default) { (_) in
-            
-            guard let audioComment = commentTextField?.text else { return }
-            
-            self.postController.addComment(with: audioComment, to: &self.post!)
+
+            guard let audioComment = audioCommentTextField?.text else { return }
+
+            self.postController.addComment(with: audioComment, audio: self.audio, to: &self.post!)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -94,8 +94,7 @@ class ImagePostDetailTableViewController: UITableViewController {
     var post: Post!
     var postController: PostController!
     var imageData: Data?
-    
-    
+    var audio: Audio?
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!

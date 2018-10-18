@@ -13,7 +13,7 @@ import FirebaseStorage
 
 class PostController {
     
-    func createPost(with title: String, ofType mediaType: MediaType, mediaData: Data, ratio: CGFloat? = nil, completion: @escaping (Bool) -> Void = { _ in }) {
+    func createPost(with title: String, ofType mediaType: MediaType, mediaData: Data, audio: Audio, ratio: CGFloat? = nil, completion: @escaping (Bool) -> Void = { _ in }) {
         
         guard let currentUser = Auth.auth().currentUser,
             let author = Author(user: currentUser) else { return }
@@ -22,25 +22,24 @@ class PostController {
             
             guard let mediaURL = mediaURL else { completion(false); return }
             
-            let imagePost = Post(title: title, mediaURL: mediaURL, ratio: ratio, author: author)
+            let imagePost = Post(title: title, mediaURL: mediaURL, ratio: ratio, author: author, audio: audio, timestamp: Date())
             
             self.postsRef.childByAutoId().setValue(imagePost.dictionaryRepresentation) { (error, ref) in
                 if let error = error {
                     NSLog("Error posting image post: \(error)")
                     completion(false)
                 }
-        
                 completion(true)
             }
         }
     }
     
-    func addComment(with text: String, to post: inout Post) {
+    func addComment(with text: String, audio: Audio?, to post: inout Post) {
         
         guard let currentUser = Auth.auth().currentUser,
-            let author = Author(user: currentUser) else { return }
+            let author = Author(user: currentUser), let audio = audio else { return }
         
-        let comment = Comment(text: text, author: author)
+        let comment = Comment(text: text, audio: audio, author: author)
         post.comments.append(comment)
         
         savePostToFirebase(post)
@@ -118,10 +117,10 @@ class PostController {
     }
     
     var posts: [Post] = []
+    var audios: [Audio] = []
     let currentUser = Auth.auth().currentUser
     let postsRef = Database.database().reference().child("posts")
     
     let storageRef = Storage.storage().reference()
-    
     
 }

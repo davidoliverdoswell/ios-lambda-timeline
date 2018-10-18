@@ -15,17 +15,20 @@ enum MediaType: String {
 
 struct Post {
     
-    init(title: String, mediaURL: URL, ratio: CGFloat? = nil, author: Author, timestamp: Date = Date()) {
+    init(title: String, mediaURL: URL, ratio: CGFloat? = nil, author: Author, audio: Audio, timestamp: Date = Date()) {
         self.mediaURL = mediaURL
         self.ratio = ratio
         self.mediaType = .image
         self.author = author
-        self.comments = [Comment(text: title, author: author)]
+        self.audio = audio
+        self.comments = [Comment(text: title, audio: audio, author: author)]
         self.timestamp = timestamp
     }
     
     init?(dictionary: [String : Any], id: String) {
         guard let mediaURLString = dictionary[Post.mediaKey] as? String,
+        let audioDictionary = dictionary[Post.audioKey] as? [String: Any],
+            let audio = Audio(dictionary: audioDictionary),
             let mediaURL = URL(string: mediaURLString),
             let mediaTypeString = dictionary[Post.mediaTypeKey] as? String,
             let mediaType = MediaType(rawValue: mediaTypeString),
@@ -38,6 +41,7 @@ struct Post {
         self.mediaType = mediaType
         self.ratio = dictionary[Post.ratioKey] as? CGFloat
         self.author = author
+        self.audio = audio
         self.timestamp = Date(timeIntervalSince1970: timestampTimeInterval)
         self.comments = captionDictionaries.compactMap({ Comment(dictionary: $0) })
         self.id = id
@@ -60,6 +64,7 @@ struct Post {
     var mediaURL: URL
     let mediaType: MediaType
     let author: Author
+    let audio: Audio?
     let timestamp: Date
     var comments: [Comment]
     var id: String?
@@ -73,6 +78,7 @@ struct Post {
     static private let ratioKey = "ratio"
     static private let mediaTypeKey = "mediaType"
     static private let authorKey = "author"
+    static private let audioKey = "audio"
     static private let commentsKey = "comments"
     static private let timestampKey = "timestamp"
     static private let idKey = "id"
